@@ -1,10 +1,13 @@
 <?php
 session_start();
+
+use App\Blogs;
 use App\Signin;
 require '../app/user/signin_complete.php';
+require '../app/blogs.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+// 認証
 $userModel = new Signin($pdo);
-
 $error = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
@@ -24,6 +27,11 @@ if (isset($_POST['logout'])) {
     header('Location: ../user/signin.php');
     exit();
 }
+
+// 
+$blogsModel = new Blogs($pdo);
+$allBlogs = $blogsModel->getBlogs();
+
 ?>
 
 <!DOCTYPE html>
@@ -53,12 +61,13 @@ if (isset($_POST['logout'])) {
 
         <!-- 記事一覧 -->
         <div>
-
-            <h2>タイトル</h2>
-            <p>作成日時</p>
-            <p>contents</p>
-            <p><a href="detail.php">詳細記事へ</a></p>
-            <div>--------------------------------------------------</div>
+            <?php foreach($allBlogs as $allBlog): ?>
+                <h2><?php echo $allBlog['title'] ?></h2>
+                <p><?php echo $allBlog['created_at'] ?></p>
+                <p><?php echo $allBlog['contents'] ?></p>
+                <p><a href="detail.php">詳細記事へ</a></p>
+                <div>--------------------------------------------------</div>
+            <?php endforeach; ?>
 
         </div>
 
