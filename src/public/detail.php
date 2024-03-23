@@ -1,3 +1,37 @@
+<?php
+session_start();
+ob_start();
+if (!isset($_SESSION['id'])) {
+    header('Location: user/signin.php');
+    exit(); 
+}
+use App\Blogs;
+use App\Comments;
+require '../app/blogs.php';
+require '../app/comments.php';
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+
+if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
+    return 'index.php';
+}
+$blogModel = new Blogs($pdo);
+$blogId = $_GET['id'];
+$_SESSION['blog_id'] = $blogId;
+
+
+$blog = $blogModel->getBlog($blogId);
+
+$commentModel = new Comments($pdo);
+$comments = $commentModel->getComments($blogId);
+
+$errorMessage = '';
+if(isset($_SESSION['errorMessage'])) {
+    $errorMessage = $_SESSION['errorMessage'];
+    unset($_SESSION['errorMessage']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,12 +47,12 @@
         <!-- 対象記事 -->
         <div>
             <div>
-                <h1>タイトル</h1>
+                <h1><?php echo $blog['title'] ?></h1>
             </div>
             <div>
                 <div>
-                    <p>作成日時:  </p>
-                    <p>contents</p>
+                    <p>作成日時:  <?php echo $blog['created_at'] ?></p>
+                    <p><?php echo $blog['contents'] ?></p>
                 </div>
                 <div>
                     <a href="index.php">一覧ページへ</a>
@@ -31,7 +65,10 @@
             <div>
                 <h2>この投稿にコメントしますか？</h2>
             </div>
-            <form action="" method="post">
+            <div>
+                <?php echo $errorMessage ?>
+            </div>
+            <form action="php/comment/store.php" method="post">
                 <!-- コメントタイトル -->
                 <div>
                     <label for="commenter_name">コメント名</label>
@@ -55,12 +92,12 @@
                 <h3>コメント一覧</h3>
             </div>
             <div>
-
-                <h4>コメントタイトル</h4>
-                <p>投稿作成日時</p>
-                <p>コメント内容</p>
-                <div>---------------------------------------------</div>
-
+                <?PHP foreach($comments as $comment): ?>
+                    <h4><?php echo $comment['commenter_name'] ?></h4>
+                    <p><?php echo $comment['comments'] ?></p>
+                    <p><?php echo $comment['created_at'] ?></p>
+                    <div>---------------------------------------------</div>
+                <?php endforeach; ?>
             </div>
         </div>
 
