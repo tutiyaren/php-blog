@@ -17,6 +17,8 @@ $comment = $_POST['comments'];
 
 $commentModel = new Comments($pdo);
 
+$createComment = $commentModel->addComments($userId, $blogId, $commentTitle, $comment);
+
 if (empty($commentTitle) || empty($comment)) {
     $_SESSION['errorMessage'] = 'コメント名かコメント内容の入力がありません';
     header('Location: ../../../detail.php?id=' . $blogId);
@@ -27,4 +29,3 @@ if ($createComment !== false) {
     exit();
 }
 
-$createComment = $commentModel->addComments($userId, $blogId, $commentTitle, $comment);
