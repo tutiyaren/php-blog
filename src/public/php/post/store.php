@@ -21,9 +21,9 @@ if (empty($title) && empty($contents)) {
     header('Location: ../../../create.php');
     exit();
 }
+$createBlog = $blogModel->addBlogs($userId, $title, $contents);
+
 if ($createBlog !== false) {
     header('Location: ../../../mypage.php');
     exit();
 }
-
-$createBlog = $blogModel->addBlogs($userId, $title, $contents);
