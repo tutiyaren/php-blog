@@ -6,9 +6,11 @@ use App\Signin;
 require '../app/user/signin_complete.php';
 require '../app/blogs.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+
 // 認証
 $userModel = new Signin($pdo);
-$error = "";
+
+$error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -17,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user = $userModel->getUserByEmail($email);
     $userModel->validate($user, $password);
-    $error = isset($_SESSION['errorMessage']) ? $_SESSION['errorMessage'] : "";
+    $error = isset($_SESSION['errorMessage']) ? $_SESSION['errorMessage'] : '';
 }
-if(!(isset($_SESSION['id']))) {
+
+if (!isset($_SESSION['id'])) {
     header('Location: user/signup.php');
 }
 if (isset($_POST['logout'])) {
@@ -30,7 +33,33 @@ if (isset($_POST['logout'])) {
 
 // ブログ一覧表示
 $blogsModel = new Blogs($pdo);
-$allBlogs = $blogsModel->getBlogs();
+$searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
+$orderBy = '';
+
+if (isset($_GET['old'])) {
+    $orderBy = 'old';
+} 
+if (isset($_GET['new'])) {
+    $orderBy = 'new';
+}
+
+if (!empty($searchKeyword)) {
+    $allBlogs = $blogsModel->searchBlogs($searchKeyword);
+}
+if(empty($searchKeyword)) {
+    $allBlogs = $blogsModel->getBlogs();
+}
+
+if ($orderBy === 'old') {
+    usort($allBlogs, function ($a, $b) {
+        return strtotime($a['created_at']) - strtotime($b['created_at']);
+    });
+}
+if ($orderBy === 'new') {
+    usort($allBlogs, function ($a, $b) {
+        return strtotime($b['created_at']) - strtotime($a['created_at']);
+    });
+}
 
 ?>
 
@@ -50,22 +79,27 @@ $allBlogs = $blogsModel->getBlogs();
             <h1>blog一覧</h1>
         </div>
         <!-- 絞り込み -->
-        <form action="" method="get">
-            <input type="text" name="" placeholder="キーワード入力">
+        <form method="get">
+            <input type="text" name="search" placeholder="キーワード入力" value="<?php echo htmlspecialchars(
+                $searchKeyword,
+                ENT_QUOTES,
+                'UTF-8'
+            ); ?>">
             <button type="submit">検索</button>
+            <button type="submit" name="new">新しい順</button>
+            <button type="submit" name="old">古い順</button>
         </form>
-        <form action="" method="">
-            <button type="submit">新しい順</button>
-            <button type="submit">古い順</button>
-        </form>
+        
 
         <!-- 記事一覧 -->
         <div>
-            <?php foreach($allBlogs as $allBlog): ?>
-                <h2><?php echo $allBlog['title'] ?></h2>
-                <p><?php echo $allBlog['created_at'] ?></p>
-                <p><?php echo mb_strimwidth($allBlog['contents'], 0, 31, '…') ?></p>
-                <p><a href="detail.php?id=<?php echo $allBlog['id'] ?>">詳細記事へ</a></p>
+            <?php foreach ($allBlogs as $allBlog): ?>
+                <h2><?php echo $allBlog['title']; ?></h2>
+                <p><?php echo $allBlog['created_at']; ?></p>
+                <p><?php echo mb_strimwidth($allBlog['contents'],0,31,'…'); ?></p>
+                <p><a href="detail.php?id=<?php echo $allBlog[
+                    'id'
+                ]; ?>">詳細記事へ</a></p>
                 <div>--------------------------------------------------</div>
             <?php endforeach; ?>
 

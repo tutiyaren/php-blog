@@ -16,7 +16,7 @@ class Blogs extends AbstractBlogs
 {
     public function getBlogs(): array
     {
-        $smt = $this->pdo->query('SELECT * FROM blogs');
+        $smt = $this->pdo->query('SELECT * FROM blogs ORDER BY created_at DESC');
         return $smt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -69,5 +69,12 @@ class Blogs extends AbstractBlogs
     public function deleteBlog($blog_id) {
         $smt = $this->pdo->prepare('DELETE FROM blogs WHERE id = :id');
         $smt->execute(array(':id' => $blog_id));
+    }
+
+    public function searchBlogs(string $searchKeyword): array
+    {
+        $smt = $this->pdo->prepare("SELECT * FROM blogs WHERE title LIKE ? OR contents LIKE ?");
+        $smt->execute(['%' . $searchKeyword . '%', '%' . $searchKeyword . '%']);
+        return $smt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
