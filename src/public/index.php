@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
-use App\UseCase\UserCaseOutput\SignInOutput;
 session_start();
 
 if (!isset($_SESSION['user']['id'])) {
