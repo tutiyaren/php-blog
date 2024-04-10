@@ -8,6 +8,14 @@ if (!isset($_SESSION['user']['id'])) {
     exit(); 
 }
 
+$blogId = $_GET['id'];
+$_SESSION['blog'] = $blogId;
+
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
+
+$userId = $_SESSION['user']['id'] ?? '';
+
 use App\Blogs;
 require '../app/blogs.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
@@ -17,7 +25,7 @@ $blogId = $_GET['id'];
 
 $blog = $blogModel->getBlog($blogId);
 
-if($blog['user_id'] !== $_SESSION['id']) {
+if($blog['user_id'] !== $_SESSION['user']['id']) {
     header('Location: mypage.php');
     exit();
 }
@@ -57,6 +65,12 @@ if($blog['user_id'] !== $_SESSION['id']) {
                     <button type="submit" name="update">編集</button>
                 </div>
             </form>
+
+            <div>
+                <?php foreach ($errors as $error): ?>
+                    <p><?php echo $error; ?></p>
+                <?php endforeach; ?>
+            </div>
         </div>
 
     </main>

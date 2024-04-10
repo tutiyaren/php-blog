@@ -35,4 +35,18 @@ final class BlogDao
         $statement->bindValue(':contents', $blog->contents()->value(), PDO::PARAM_STR);
         $statement->execute();
     }
+
+    public function update(NewBlog $blog): void
+    {
+        $sql = sprintf(
+            'UPDATE %s SET title = :title, contents = :contents WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(array(
+            ':id' => $blog->id()->value(),
+            ':title' => $blog->title()->value(),
+            ':contents' => $blog->contents()->value(),
+        ));
+    }
 }

@@ -1,12 +1,12 @@
 <?php
-namespace App\Domain\ValueObject\Blog;
-require_once __DIR__ . '/../../../../vendor/autoload.php';
+namespace App\UseCase\UseCaseInput;
+require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Domain\ValueObject\Blog\BlogId;
 use App\Domain\ValueObject\Blog\BlogUserId;
 use App\Domain\ValueObject\Blog\BlogTitle;
-use App\Domain\ValueObject\Blog\BlogContents;
+use APp\Domain\ValueObject\Blog\BlogContents;
 
-final class NewBlog
+final class EditBlogInput
 {
     private $id;
     private $user_id;
