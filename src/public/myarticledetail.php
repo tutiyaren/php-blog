@@ -21,7 +21,7 @@ $blogId = $_GET['id'];
 
 $blog = $blogModel->getBlog($blogId);
 
-if($blog['user_id'] !== $_SESSION['id']) {
+if($blog['user_id'] !== $_SESSION['user']['id']) {
     header('Location: mypage.php');
     exit();
 }

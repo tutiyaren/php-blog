@@ -11,7 +11,7 @@ if (!(isset($_POST['commenter_name']) && isset($_POST['comments']))) {
     exit();
 }
 
-$userId = $_SESSION['id'];
+$userId = $_SESSION['user']['id'];
 $commentTitle = $_POST['commenter_name'];
 $comment = $_POST['comments'];
 
