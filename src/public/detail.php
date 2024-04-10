@@ -7,8 +7,14 @@ if (!isset($_SESSION['user']['id'])) {
     Redirect::handler('user/signin.php');
     exit(); 
 }
+
+$blogId = $_GET['id'];
+$_SESSION['blog'] = $blogId;
+
+
 $errors = $_SESSION['errors'] ?? [];
 unset($_SESSION['errors']);
+
 
 use App\Blogs;
 use App\Comments;
@@ -20,8 +26,6 @@ if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
     return 'index.php';
 }
 $blogModel = new Blogs($pdo);
-$blogId = $_GET['id'];
-$_SESSION['blog_id'] = $blogId;
 
 
 $blog = $blogModel->getBlog($blogId);
