@@ -5,7 +5,7 @@ use App\Adapter\QueryServise\BlogQueryServise;
 use App\Adapter\Repository\BlogRepository;
 use App\UseCase\UseCaseInput\EditBlogInput;
 use App\UseCase\UseCaseOutput\EditBlogOutput;
-use App\Domain\ValueObject\Blog\NewBlog;
+use App\Domain\ValueObject\Blog\EditBlog;
 use App\Domain\Entity\Blog;
 
 final class EditBlogInteractor
@@ -30,7 +30,7 @@ final class EditBlogInteractor
 
     private function editBlog(): void
     {
-        $newBlog = new NewBlog(
+        $newBlog = new EditBlog(
             $this->input->id(),
             $this->input->user_id(),
             $this->input->title(),

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Domain\ValueObject\Blog\BlogId;
 use App\Domain\ValueObject\Blog\BlogUserId;
 use App\Domain\ValueObject\Blog\BlogTitle;
 use App\Domain\ValueObject\Blog\BlogContents;
@@ -23,12 +24,11 @@ try {
     $useCaseInput = new CreateBlogInput($blogUserId, $blogTitle, $blogContents);
     $useCase = new CreateBlogInteractor($useCaseInput);
     $useCaseOutput = $useCase->handler();
-
     if(!$useCaseOutput->isSuccess()) {
         throw new Exception($useCaseOutput->message());
     }
     $_SESSION['message'] = $useCaseOutput->message();
-    Redirect::handler('/index.php');
+    Redirect::handler('/mypage.php');
 } catch(Exception $e) {
     $_SESSION['errors'][] = $e->getMessage();
     $_SESSION['user']['title'] = $title;

@@ -3,6 +3,7 @@ namespace App\Adapter\Repository;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Infrastructure\Dao\BlogDao;
 use App\Domain\ValueObject\Blog\NewBlog;
+use App\Domain\ValueObject\Blog\EditBlog;
 
 final class BlogRepository
 {
@@ -18,7 +19,7 @@ final class BlogRepository
         $this->blogDao->create($blog);
     }
 
-    public function edit(NewBlog $blog): void
+    public function edit(EditBlog $blog): void
     {
         $this->blogDao->update($blog);
     }

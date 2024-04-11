@@ -1,26 +1,33 @@
 <?php
-namespace App\UseCase\UseCaseInput;
-require_once __DIR__ . '/../../../vendor/autoload.php';
+namespace App\Domain\ValueObject\Blog;
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 use App\Domain\ValueObject\Blog\BlogId;
 use App\Domain\ValueObject\Blog\BlogUserId;
 use App\Domain\ValueObject\Blog\BlogTitle;
-use APp\Domain\ValueObject\Blog\BlogContents;
+use App\Domain\ValueObject\Blog\BlogContents;
 
-final class CreateBlogInput
+final class EditBlog
 {
+    private $id;
     private $user_id;
     private $title;
     private $contents;
 
-    public function __construct(BlogUserId $user_id, BlogTitle $title, BlogContents $contents)
+    public function __construct(BlogId $id, BlogUserId $user_id, BlogTitle $title, BlogContents $contents)
     {
-        
+        $this->id = $id;
         $this->user_id = $user_id;
         $this->title = $title;
         $this->contents = $contents;
     }
 
-    public function user_id(){
+    public function id(): BlogId
+    {
+        return $this->id;
+    }
+
+    public function user_id(): BlogUserId
+    {
         return $this->user_id;
     }
 

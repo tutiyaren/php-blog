@@ -2,6 +2,7 @@
 namespace App\Infrastructure\Dao;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Domain\ValueObject\Blog\NewBlog;
+use App\Domain\ValueObject\Blog\EditBlog;
 use \PDO;
 use PDOException;
 
@@ -36,7 +37,7 @@ final class BlogDao
         $statement->execute();
     }
 
-    public function update(NewBlog $blog): void
+    public function update(EditBlog $blog): void
     {
         $sql = sprintf(
             'UPDATE %s SET title = :title, contents = :contents WHERE id = :id',
