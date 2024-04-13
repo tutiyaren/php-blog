@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Adapter\Repository\BlogRepository;
+use App\UseCase\GetMypageDetailUseCase;
+use App\Infrastructure\Dao\BlogDao;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -8,23 +11,19 @@ if (!isset($_SESSION['user']['id'])) {
     exit(); 
 }
 
-use App\Blogs;
-require '../app/blogs.php';
-$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
-    header('Location: mypage.php');
-    exit();
-}
-$blogModel = new Blogs($pdo);
 $blogId = $_GET['id'];
+$_SESSION['blog'] = $blogId;
 
-$blog = $blogModel->getBlog($blogId);
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
 
-if($blog['user_id'] !== $_SESSION['user']['id']) {
-    header('Location: mypage.php');
-    exit();
-}
+$userId = $_SESSION['user']['id'] ?? '';
+
+
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+$blogMypageDetailRepository = new BlogRepository(new BlogDao($pdo));
+$getMypageDetailUseCase = new GetMypageDetailUseCase($blogMypageDetailRepository);
+$blog = $getMypageDetailUseCase->readMypageDetailBlog($blogId);
 
 ?>
 

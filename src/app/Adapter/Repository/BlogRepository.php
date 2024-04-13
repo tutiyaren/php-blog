@@ -34,4 +34,9 @@ final class BlogRepository
     {
         return $this->blogDao->readMypage($userId);
     }
+
+    public function readMypageDetail($blogId)
+    {
+        return $this->blogDao->readMypageDetail($blogId);
+    }
 }
