@@ -22,7 +22,6 @@ $userId = $_SESSION['user']['id'] ?? '';
 
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
 $blogRepository = new BlogRepository(new BlogDao($pdo));
-$blogData = $blogRepository->readEdit($blogId);
 $getBlogUseCase = new GetEditBlogUseCase($blogRepository);
 $blog = $getBlogUseCase->readEditBlog($blogId);
 
