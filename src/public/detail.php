@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Adapter\Repository\BlogRepository;
+use App\UseCase\GetDetailBlogUseCase;
+use App\Infrastructure\Dao\BlogDao;
+use App\Adapter\Repository\CommentRepository;
+use App\UseCase\GetCommentUseCase;
+use App\Infrastructure\Dao\CommentDao;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -15,24 +21,14 @@ $_SESSION['blog'] = $blogId;
 $errors = $_SESSION['errors'] ?? [];
 unset($_SESSION['errors']);
 
-
-use App\Blogs;
-use App\Comments;
-require '../app/blogs.php';
-require '../app/comments.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+$blogDetailRepository = new BlogRepository(new BlogDao($pdo));
+$getDetailUseCase = new GetDetailBlogUseCase($blogDetailRepository);
+$blog = $getDetailUseCase->readDetailBlog($blogId);
 
-if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
-    return 'index.php';
-}
-$blogModel = new Blogs($pdo);
-
-
-$blog = $blogModel->getBlog($blogId);
-
-$commentModel = new Comments($pdo);
-$comments = $commentModel->getComments($blogId);
-
+$commentAllRepository = new CommentRepository(new CommentDao($pdo));
+$getCommentUseCase = new GetCommentUseCase($commentAllRepository);
+$comments = $getCommentUseCase->readAllComment($blogId);
 
 ?>
 

@@ -84,4 +84,15 @@ final class BlogDao
         $statement->execute(['id' => $blogId]);
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function readDetail($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 }

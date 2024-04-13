@@ -36,4 +36,15 @@ final class CommentDao
         $statement->bindValue(':comments', $comment->comments()->value(), PDO::PARAM_STR);
         $statement->execute();
     }
+
+    public function allComment($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM comments WHERE blog_id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
