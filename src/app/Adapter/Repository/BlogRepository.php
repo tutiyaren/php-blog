@@ -44,4 +44,14 @@ final class BlogRepository
     {
         return $this->blogDao->readDetail($blogId);
     }
+
+    public function allBlog()
+    {
+        return $this->blogDao->allBlog();
+    }
+
+    public function searchBlog($searchKeyword)
+    {
+        return $this->blogDao->searchBlog($searchKeyword);
+    }
 }

@@ -95,4 +95,25 @@ final class BlogDao
         $statement->execute(['id' => $blogId]);
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function allBlog()
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs ORDER BY created_at DESC',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->query($sql);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function searchBlog($searchKeyword)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE title LIKE ? OR contents LIKE ?',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['%' . $searchKeyword . '%', '%' . $searchKeyword . '%']);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
