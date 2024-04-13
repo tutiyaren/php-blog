@@ -3,6 +3,7 @@ namespace App\Infrastructure\Dao;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Domain\ValueObject\Blog\NewBlog;
 use App\Domain\ValueObject\Blog\EditBlog;
+use App\Domain\ValueObject\Blog\ReadEditBlog;
 use \PDO;
 use PDOException;
 
@@ -50,4 +51,16 @@ final class BlogDao
             ':contents' => $blog->contents()->value(),
         ));
     }
+    
+    public function readEdit($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+    
 }

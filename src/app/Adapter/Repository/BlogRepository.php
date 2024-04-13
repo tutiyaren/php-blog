@@ -5,6 +5,7 @@ use App\Infrastructure\Dao\BlogDao;
 use App\Domain\ValueObject\Blog\NewBlog;
 use App\Domain\ValueObject\Blog\EditBlog;
 
+
 final class BlogRepository
 {
     private $blogDao;
@@ -22,5 +23,10 @@ final class BlogRepository
     public function edit(EditBlog $blog): void
     {
         $this->blogDao->update($blog);
+    }
+
+    public function readEdit($blogId)
+    {
+        return $this->blogDao->readEdit($blogId);
     }
 }
