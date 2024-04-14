@@ -5,6 +5,8 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\InputPassword;
 use App\UseCase\UseCaseInput\SignInInput;
 use App\UseCase\UseCaseInteractor\SignInInteractor;
+use App\Infrastructure\Dao\UserDao;
+use App\Infrastructure\Dao\UserAgeDao;
 
 session_start();
 $email = filter_input(INPUT_POST, 'email');
@@ -17,11 +19,15 @@ try {
     $userEmail = new Email($email);
     $inputPassword = new InputPassword($password);
     $useCaseInput = new SignInInput($userEmail, $inputPassword);
-    $useCase = new SignInInteractor($useCaseInput);
+    $userDao = new UserDao();
+    $userAgeDao = new UserAgeDao();
+    $useCase = new SignInInteractor($useCaseInput, $userDao, $userAgeDao);
     $useCaseOutput = $useCase->handler();
 
-    if(!$useCaseOutput->isSuccess()) {
-        throw new Exception($useCaseOutput->message());
+    if (!$useCaseOutput->isSuccess()) {
+        throw new Exception(
+            'メールアドレスまたは<br />パスワードが間違っています'
+        );
     }
     Redirect::handler('../index.php');
 } catch (Exception $e) {

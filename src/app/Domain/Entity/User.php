@@ -59,6 +59,7 @@ final class User
 
     public function isPremiumMember(): bool
     {
-        return $this->registrationDate->isLongTermCustomer() && $this->age->isAdult();
+        return $this->registrationDate->isLongTermCustomer() &&
+            $this->age->isAdult();
     }
 }

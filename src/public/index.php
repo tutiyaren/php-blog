@@ -8,6 +8,7 @@ session_start();
 if (!isset($_SESSION['user']['id'])) {
     Redirect::handler('./user/signin.php');
 }
+$memberStatus = $_SESSION['user']['memberStatus'];
 
 $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
 $orderBy = '';
@@ -55,6 +56,7 @@ if ($orderBy === 'new') {
 
     <main>
         <!-- タイトル -->
+        <p><?php echo $memberStatus; ?></p>
         <div>
             <h1>blog一覧</h1>
         </div>
