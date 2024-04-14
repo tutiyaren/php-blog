@@ -6,9 +6,9 @@ use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\User\Age;
 use App\Domain\ValueObject\InputPassword;
 use App\UseCase\UseCaseInput\SignUpInput;
-use App\Infrastructure\Dao\UserDao;
-use App\Infrastructure\Dao\UserAgeDao;
 use App\UseCase\UseCaseInteractor\SignUpInteractor;
+use App\Adapter\User\UserMysqlCommand;
+use App\Adapter\User\UserMysqlQuery;
 
 $name = filter_input(INPUT_POST, 'name');
 $email = filter_input(INPUT_POST, 'email');
@@ -35,10 +35,14 @@ try {
         $userPassword,
         $userAge
     );
-    $userDao = new UserDao();
-    $userAgeDao = new UserAgeDao();
-    $useCase = new SignUpInteractor($useCaseInput, $userDao, $userAgeDao);
-    $useCaseOutput = $useCase->handler();
+    $userMysqlQuery = new UserMysqlQuery();
+    $userMysqlCommand = new UserMysqlCommand();
+    $useCase = new SignUpInteractor(
+        $useCaseInput,
+        $userMysqlQuery,
+        $userMysqlCommand
+    );
+    $useCaseOutput = $useCase->run();
 
     if (!$useCaseOutput->isSuccess()) {
         throw new Exception('すでに登録済みのメールアドレスです');
