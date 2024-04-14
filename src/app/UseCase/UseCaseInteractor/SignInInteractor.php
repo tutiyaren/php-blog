@@ -1,46 +1,55 @@
 <?php
 namespace App\UseCase\UseCaseInteractor;
 require_once __DIR__ . '/../../../vendor/autoload.php';
-use App\Adapter\QueryServise\UserQueryServise;
 use App\UseCase\UseCaseInput\SignInInput;
+use App\Infrastructure\Dao\UserDao;
+use App\Infrastructure\Dao\UserAgeDao;
 use App\UseCase\UseCaseOutput\SignInOutput;
 use App\Domain\Entity\User;
+use App\Domain\ValueObject\User\UserId;
+use App\Domain\ValueObject\User\UserName;
+use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\HashedPassword;
+use App\Domain\ValueObject\User\Age;
+use App\Domain\ValueObject\User\RegistrationDate;
+use Exception;
 
 final class SignInInteractor
 {
-    const FAILED_MESSAGE = 'メールアドレスまたは<br />パスワードが間違っています';
-    const SUCCESS_MESSAGE = 'ログインしました';
-    private $userQueryServise;
     private $input;
+    private $userDao;
+    private $userAgeDao;
 
-    public function __construct(SignInInput $input)
-    {
-        $this->userQueryServise = new UserQueryServise();
+    public function __construct(
+        SignInInput $input,
+        UserDao $userDao,
+        UserAgeDao $userAgeDao
+    ) {
         $this->input = $input;
+        $this->userDao = $userDao;
+        $this->userAgeDao = $userAgeDao;
     }
 
     public function handler(): SignInOutput
     {
         $user = $this->findUser();
-        if($this->notExistsUser($user)) {
-            return new SignInOutput(false, self::FAILED_MESSAGE);
+        if ($user === null) {
+            return new SignInOutput(false);
         }
-        if($this->isInvalidPassword($user->password())) {
-            return new SignInOutput(false, self::FAILED_MESSAGE);
+        $userMapper = $this->createUserEntity($user);
+        if ($userMapper === null) {
+            throw new Exception('年齢の登録をしてください!');
         }
-        $this->saveSession($user);
-        return new SignInOutput(true, self::SUCCESS_MESSAGE);
+        if ($this->isInvalidPassword($userMapper->password())) {
+            return new SignInOutput(false);
+        }
+        $this->saveSession($userMapper);
+        return new SignInOutput(true);
     }
 
-    private function findUser(): ?User
+    private function findUser(): ?array
     {
-        return $this->userQueryServise->findByEmail($this->input->email());
-    }
-
-    private function notExistsUser(?User $user): bool
-    {
-        return is_null($user);
+        return $this->userDao->findByEmail($this->input->email());
     }
 
     private function isInvalidPassword(HashedPassword $hashedPassword): bool
@@ -48,9 +57,31 @@ final class SignInInteractor
         return !$hashedPassword->verify($this->input->password());
     }
 
+    private function createUserEntity(array $user): ?User
+    {
+        $userAge = $this->userAgeDao->fetchAll($user['id']);
+        if ($userAge === null) {
+            return null;
+        }
+        return new User(
+            new UserId($user['id']),
+            new UserName($user['name']),
+            new Email($user['email']),
+            new HashedPassword($user['password']),
+            new Age($userAge['age']),
+            new RegistrationDate($user['created_at'])
+        );
+    }
+
     private function saveSession(User $user): void
     {
         $_SESSION['user']['id'] = $user->id()->value();
         $_SESSION['user']['name'] = $user->name()->value();
+        if ($user->isPremiumMember()) {
+            $_SESSION['user']['memberStatus'] = 'プレミアム会員';
+        }
+        if (!$user->isPremiumMember()) {
+            $_SESSION['user']['memberStatus'] = 'ノーマル会員';
+        }
     }
 }
