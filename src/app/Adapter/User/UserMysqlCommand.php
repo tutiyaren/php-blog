@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Infrastructure\Dao\UserDao;
 use App\Domain\ValueObject\User\NewUser;
 use App\Domain\Interface\UserCommand;
+use App\Domain\ValueObject\Email;
 
 class UserMySqlCommand
 {
