@@ -18,7 +18,7 @@ use App\Domain\ValueObject\User\RegistrationDate;
 
 final class SignInTest extends TestCase
 {
-    public function testメールアドレスまたはパスワードがDBと一致している場合()
+    public function testメールアドレスとパスワードがDBと一致している場合()
     {
         $input = new SignInInput(
             new Email('aaa@example.com'),
@@ -27,12 +27,14 @@ final class SignInTest extends TestCase
         $userMysqlQuery = new class extends UserMysqlQuery
         {
             public function findByEmail(Email $email): ?User
-            {
+            {  
+                $pass = 'Aaaaaaa1';
+                $hashedPass = HashedPassword::hashPassword($pass);
                 return new User(
                     new UserId(1),
                     new UserName('techquest'),
                     new Email('aaa@example.com'),
-                    new HashedPassword('Aaaaaaa1'),
+                    new HashedPassword($hashedPass),
                     new Age('20'),
                     new RegistrationDate('2020-12-10 12:58:29')
                 );

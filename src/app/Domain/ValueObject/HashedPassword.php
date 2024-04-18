@@ -25,4 +25,9 @@ final class HashedPassword
     {
         return password_verify($inputPassword->value(), $this->value);
     }
+
+    public static function hashPassword(string $value): string
+    {
+        return password_hash($value, PASSWORD_BCRYPT);
+    }
 }
