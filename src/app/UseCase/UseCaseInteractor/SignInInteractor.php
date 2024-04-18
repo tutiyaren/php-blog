@@ -12,6 +12,7 @@ use App\Domain\ValueObject\User\Age;
 use App\Domain\ValueObject\User\RegistrationDate;
 use Exception;
 use App\Domain\Entity\User;
+use App\Domain\Entity\UserAge;
 use App\Adapter\User\UserMysqlQuery;
 use App\Adapter\User\UserMysqlCommand;
 
@@ -34,7 +35,7 @@ final class SignInInteractor
     public function run(): SignInOutput
     {
         $user = $this->findUser();
-        if ($this->existsUser($user)) {
+        if (!$this->existsUser($user)) {
             return new SignInOutput(false);
         }
         $userMapper = $this->createUserEntity($user);
@@ -62,25 +63,23 @@ final class SignInInteractor
         return !$hashedPassword->verify($this->input->password());
     }
 
-    private function createUserEntity($user): ?User
+    private function createUserEntity(?User $user): ?User
     {
-        $userAge = $this->userMysqlQuery->fetchAll($user['id']);
-        if ($userAge === null) {
+        if ($user === null) {
             return null;
         }
         return new User(
-            new UserId($user['id']),
-            new UserName($user['name']),
-            new Email($user['email']),
-            new HashedPassword($user['password']),
-            new Age($userAge['age']),
-            new RegistrationDate($user['created_at'])
+            new UserId($user->id()->value()),
+            new UserName($user->name()->value()),
+            new Email($user->email()->value()),
+            new HashedPassword($user->password()->value()),
+            new Age($user->age()->value()),
+            new RegistrationDate($user->registrationDate()->value())
         );
     }
 
     private function saveSession(User $user): void
     {
-        session_start();
         $_SESSION['user']['id'] = $user->id()->value();
         $_SESSION['user']['name'] = $user->name()->value();
         if ($user->isPremiumMember()) {
