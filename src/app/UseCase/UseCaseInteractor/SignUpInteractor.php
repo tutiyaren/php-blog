@@ -62,12 +62,14 @@ final class SignUpInteractor
         );
 
         $user = $this->findUser();
-        $userId = $user->id()->value();
-        $this->userMysqlCommand->create(
-            new UserAge(
-                new UserId($userId),
-                $this->input->age()
-            )
-        );
+        if ($user) {
+            $userId = $user->id()->value();
+            $this->userMysqlCommand->create(
+                new UserAge(
+                    new UserId($userId),
+                    $this->input->age()
+                )
+            );
+        }
     }
 }
