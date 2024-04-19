@@ -4,10 +4,11 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\UseCase\UseCaseInput\SignUpInput;
 use App\UseCase\UseCaseOutput\SignUpOutput;
 use App\Domain\ValueObject\User\NewUser;
-
 use App\Domain\Entity\User;
 use App\Adapter\User\UserMySqlQuery;
 use App\Adapter\User\UserMySqlCommand;
+use App\Domain\Entity\UserAge;
+use App\Domain\ValueObject\User\UserId;
 
 /**
  * ユーザー登録ユースケース
@@ -57,6 +58,15 @@ final class SignUpInteractor
                 $this->input->name(),
                 $this->input->email(),
                 $this->input->password()
+            )
+        );
+
+        $user = $this->findUser();
+        $userId = $user->id()->value();
+        $this->userMysqlCommand->create(
+            new UserAge(
+                new UserId($userId),
+                $this->input->age()
             )
         );
     }

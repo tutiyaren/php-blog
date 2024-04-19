@@ -68,6 +68,10 @@ final class SignInInteractor
         if ($user === null) {
             return null;
         }
+        // new UserAge(
+        //     new UserId($user->id()->value()),
+        //     new Age($user->age()->value())
+        // );
         return new User(
             new UserId($user->id()->value()),
             new UserName($user->name()->value()),
