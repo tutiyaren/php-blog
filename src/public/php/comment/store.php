@@ -9,6 +9,8 @@ use App\Domain\ValueObject\Comment\CommentComments;
 use App\UseCase\UseCaseInput\CreateCommentInput;
 use App\UseCase\UseCaseInteractor\CreateCommentInteractor;
 use APp\UseCase\UseCaseOutput\CreateCommentOutput;
+use App\Adapter\Comment\CommentMysqlCommand;
+use App\Adapter\Comment\CommentMysqlQuery;
 
 $commenter_name = filter_input(INPUT_POST, 'commenter_name');
 $comments = filter_input(INPUT_POST, 'comments');
@@ -16,7 +18,7 @@ $comments = filter_input(INPUT_POST, 'comments');
 try {
     session_start();
     if(empty($commenter_name)) {
-        throw new Exception('コメントタイトルを入力して');
+        throw new Exception('コメント名を入力して');
     }
     $user_id = $_SESSION['user']['id'];
     $blog_id = $_SESSION['blog'];
@@ -25,8 +27,10 @@ try {
     $commentCommenter_name = new CommentCommenter_name($commenter_name);
     $commentComments = new CommentComments($comments);
     $useCaseInput = new CreateCommentInput($commentUserId, $commentBlogId, $commentCommenter_name, $commentComments);
-    $useCase = new CreateCommentInteractor($useCaseInput);
-    $useCaseOutput = $useCase->handler();
+    $commentMysqlQuery = new CommentMysqlQuery();
+    $commentMysqlCommand = new CommentMysqlCommand();
+    $useCase = new CreateCommentInteractor($useCaseInput, $commentMysqlQuery, $commentMysqlCommand);
+    $useCaseOutput = $useCase->run();
 
     if(!$useCaseOutput->isSuccess()) {
         throw new Exception($useCaseOutput->message());
