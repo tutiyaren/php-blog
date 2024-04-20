@@ -1,26 +1,26 @@
 <?php
 namespace App\UseCase;
 
-use App\Adapter\Repository\BlogRepository;
+use App\Adapter\Blog\BlogMysqlCommand;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 class GetAllBlogUseCase
 {
-    public $blogAllRepository;
+    public $blogAllCommand;
 
-    public function __construct(BlogRepository $blogAllRepository)
+    public function __construct(BlogMysqlCommand $blogAllCommand)
     {
-        $this->blogAllRepository = $blogAllRepository;
+        $this->blogAllCommand = $blogAllCommand;
     }
 
     public function readAllBlog()
     {
-        return $this->blogAllRepository->allBlog();
+        return $this->blogAllCommand->allBlog();
     }
 
     public function searchAllBlog($searchKeyword)
     {
-        return $this->blogAllRepository->searchBlog($searchKeyword);
+        return $this->blogAllCommand->searchBlog($searchKeyword);
     }
 }
