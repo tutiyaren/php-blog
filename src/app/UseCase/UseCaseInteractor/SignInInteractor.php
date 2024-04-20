@@ -65,13 +65,11 @@ final class SignInInteractor
 
     private function createUserEntity(?User $user): ?User
     {
-        if ($user === null) {
+        $userAge = $this->userMysqlQuery->fetchAllAge($user->id()->value());
+        if ($userAge === null) {
             return null;
         }
-        // new UserAge(
-        //     new UserId($user->id()->value()),
-        //     new Age($user->age()->value())
-        // );
+
         return new User(
             new UserId($user->id()->value()),
             new UserName($user->name()->value()),
@@ -81,6 +79,7 @@ final class SignInInteractor
             new RegistrationDate($user->registrationDate()->value())
         );
     }
+    
 
     private function saveSession(User $user): void
     {
