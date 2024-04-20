@@ -3,7 +3,7 @@ namespace App\Adapter\Blog;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Infrastructure\Dao\BlogDao;
 use App\Domain\ValueObject\Blog\NewBlog;
-use App\Domain\Entity\Blog;
+use App\Domain\ValueObject\Blog\EditBlog;
 
 class BlogMysqlCommand
 {
@@ -17,5 +17,10 @@ class BlogMysqlCommand
     public function insert(NewBlog $blog): void
     {
         $this->blogDao->create($blog);
+    }
+
+    public function edit(EditBlog $blog): void
+    {
+        $this->blogDao->update($blog);
     }
 }
