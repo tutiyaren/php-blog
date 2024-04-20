@@ -33,4 +33,9 @@ class BlogMysqlCommand
     {
         return $this->blogDao->readMypageDetail($blogId);
     }
+
+    public function readMypage($userId)
+    {
+        return $this->blogDao->readMypage($userId);
+    }
 }
