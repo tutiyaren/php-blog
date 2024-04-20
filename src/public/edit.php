@@ -4,6 +4,7 @@ use App\Infrastructure\Redirect\Redirect;
 use App\Adapter\Repository\BlogRepository;
 use App\UseCase\GetEditBlogUseCase;
 use App\Infrastructure\Dao\BlogDao;
+use App\Adapter\Blog\BlogMysqlCommand;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -21,7 +22,7 @@ $userId = $_SESSION['user']['id'] ?? '';
 
 
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-$blogRepository = new BlogRepository(new BlogDao($pdo));
+$blogRepository = new BlogMysqlCommand(new BlogDao($pdo));
 $getBlogUseCase = new GetEditBlogUseCase($blogRepository);
 $blog = $getBlogUseCase->readEditBlog($blogId);
 
