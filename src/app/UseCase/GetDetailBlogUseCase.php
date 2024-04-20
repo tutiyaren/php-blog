@@ -1,19 +1,19 @@
 <?php
 namespace App\UseCase;
 require_once __DIR__ . '/../../vendor/autoload.php';
-use App\Adapter\Repository\BlogRepository;
+use App\Adapter\Blog\BlogMysqlCommand;
 
 class GetDetailBlogUseCase
 {
-    public $blogDetailRepository;
+    public $blogMysqlCommand;
 
-    public function __construct(BlogRepository $blogDetailRepository)
+    public function __construct(BlogMysqlCommand $blogMysqlCommand)
     {
-        $this->blogDetailRepository = $blogDetailRepository;
+        $this->blogMysqlCommand = $blogMysqlCommand;
     }
 
     public function readDetailBlog($blogId)
     {
-        return $this->blogDetailRepository->readDetail($blogId);
+        return $this->blogMysqlCommand->readDetail($blogId);
     }
 }
