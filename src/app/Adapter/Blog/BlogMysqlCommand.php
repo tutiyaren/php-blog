@@ -29,4 +29,8 @@ class BlogMysqlCommand
         return $this->blogDao->readEdit($blogId);
     }
 
+    public function readMypageDetail($blogId)
+    {
+        return $this->blogDao->readMypageDetail($blogId);
+    }
 }
