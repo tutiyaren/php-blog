@@ -24,7 +24,18 @@ final class CreateCommentTest extends TestCase
             new CommentCommenter_name('AA'),
             new CommentComments('aaaaaaaa')
         );
-        $interactor = new CreateCommentInteractor($input, new CommentMysqlQuery(), new CommentMysqlCommand());
+        $commentMysqlQuery = new class extends CommentMysqlQuery
+        {
+
+        };
+        $commentMysqlCommand = new class extends CommentMysqlCommand
+        {
+            public function insert(NewComment $comment): void
+            {
+
+            }
+        };
+        $interactor = new CreateCommentInteractor($input, $commentMysqlQuery, $commentMysqlCommand);
         $this->assertSame(true, $interactor->run()->isSuccess());
     }
 
@@ -38,7 +49,18 @@ final class CreateCommentTest extends TestCase
             new CommentCommenter_name('あいうえおあいうえおあいうえおあいうえおあ'),
             new CommentComments('aaaaaaaa')
         );
-        $interactor = new CreateCommentInteractor($input, new CommentMysqlQuery(), new CommentMysqlCommand());
+        $commentMysqlQuery = new class extends CommentMysqlQuery
+        {
+
+        };
+        $commentMysqlCommand = new class extends CommentMysqlCommand
+        {
+            public function insert(NewComment $comment): void
+            {
+
+            }
+        };
+        $interactor = new CreateCommentInteractor($input, $commentMysqlQuery, $commentMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 
@@ -52,7 +74,18 @@ final class CreateCommentTest extends TestCase
             new CommentCommenter_name('AAA'),
             new CommentComments('あいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあ')
         );
-        $interactor = new CreateCommentInteractor($input, new CommentMysqlQuery(), new CommentMysqlCommand());
+        $commentMysqlQuery = new class extends CommentMysqlQuery
+        {
+
+        };
+        $commentMysqlCommand = new class extends CommentMysqlCommand
+        {
+            public function insert(NewComment $comment): void
+            {
+
+            }
+        };
+        $interactor = new CreateCommentInteractor($input, $commentMysqlQuery, $commentMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 }
