@@ -18,8 +18,12 @@ final class GetEditBlogUseCaseTest extends TestCase
             'created_at' => '2024-04-18 21:37:35',
             'updated_at' => '2024-04-20 13:50:46'
         ];
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            
+        };
 
-        $interactor = new GetEditBlogUseCase(new BlogMysqlCommand());
+        $interactor = new GetEditBlogUseCase($blogMysqlCommand);
         $actualBlogData = $interactor->readEditBlog($blogId);
         $this->assertEquals($expectedBlogData, $actualBlogData);
     }
