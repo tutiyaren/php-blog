@@ -22,7 +22,18 @@ final class CreateBlogTest extends TestCase
             new BlogTitle('AAA'),
             new BlogContents('aaaaaaaaa')
         );
-        $interactor = new CreateBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+            
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function insert(NewBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new CreateBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(true, $interactor->run()->isSuccess());
     }
 
@@ -36,7 +47,18 @@ final class CreateBlogTest extends TestCase
             new BlogTitle('あいうえおあいうえおあいうえおあいうえおあ'),
             new BlogContents('aaaaaaaaa')
         );
-        $interactor = new CreateBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+            
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function insert(NewBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new CreateBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 
@@ -49,7 +71,18 @@ final class CreateBlogTest extends TestCase
             new BlogTitle('AAA'),
             new BlogContents('あいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあ')
         );
-        $interactor = new CreateBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+            
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function insert(NewBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new CreateBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 }
