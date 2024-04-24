@@ -12,6 +12,7 @@ use App\Domain\ValueObject\Blog\BlogContents;
 use App\Domain\ValueObject\Blog\NewBlog;
 use App\Adapter\Blog\BlogMysqlCommand;
 use App\Adapter\Blog\BlogMysqlQuery;
+use App\Domain\ValueObject\Blog\EditBlog;
 
 final class EditBlogTest extends TestCase
 {
@@ -23,7 +24,18 @@ final class EditBlogTest extends TestCase
             new BlogTitle('AAA'),
             new BlogContents('aaaaaaaaa')
         );
-        $interactor = new EditBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function edit(EditBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new EditBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(true, $interactor->run()->isSuccess());
     }
 
@@ -38,7 +50,18 @@ final class EditBlogTest extends TestCase
             new BlogTitle('あいうえおあいうえおあいうえおあいうえおあ'),
             new BlogContents('aaaaaaaaa')
         );
-        $interactor = new EditBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function edit(EditBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new EditBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 
@@ -52,7 +75,18 @@ final class EditBlogTest extends TestCase
             new BlogTitle('AAA'),
             new BlogContents('あいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあいうえおあ')
         );
-        $interactor = new EditBlogInteractor($input, new BlogMysqlQuery(), new BlogMysqlCommand());
+        $blogMysqlQuery = new class extends BlogMysqlQuery
+        {
+
+        };
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            public function edit(EditBlog $blog): void
+            {
+
+            }
+        };
+        $interactor = new EditBlogInteractor($input, $blogMysqlQuery, $blogMysqlCommand);
         $this->assertSame(false, $interactor->run()->isSuccess());
     }
 }
