@@ -1,5 +1,5 @@
 <?php
-namespace APp\UseCase\UseCaseOutput;
+namespace App\UseCase\UseCaseOutput;
 
 final class CreateBlogOutput
 {
