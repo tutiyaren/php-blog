@@ -18,8 +18,12 @@ final class GetMypageDetailUseCaseTest extends TestCase
             'created_at' => '2024-04-18 21:37:35',
             'updated_at' => '2024-04-20 13:50:46'
         ];
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            
+        };
 
-        $interactor = new GetMypageDetailUseCase(new BlogMysqlCommand());
+        $interactor = new GetMypageDetailUseCase($blogMysqlCommand);
         $actualBlogData = $interactor->readMypageDetailBlog($blogId);
         $this->assertEquals($expectedBlogData, $actualBlogData);
     }
