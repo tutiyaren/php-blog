@@ -11,7 +11,12 @@ final class GetMypageUseCaseTest extends TestCase
     {
         $userId = 1;
 
-        $interactor = new GetMypageUseCase(new BlogMysqlCommand());
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            
+        };
+
+        $interactor = new GetMypageUseCase($blogMysqlCommand);
         $actualBlogData = $interactor->readMypageBlog($userId);
 
         $this->assertIsArray($actualBlogData);
