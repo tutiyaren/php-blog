@@ -9,7 +9,12 @@ final class GetAllBlogUseCaseTest extends TestCase
 {
     public function testトップページですべてのデータを取得できる場合()
     {
-        $interactor = new GetAllBlogUseCase(new BlogMysqlCommand());
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            
+        };
+
+        $interactor = new GetAllBlogUseCase($blogMysqlCommand);
         $actualBlogData = $interactor->readAllBlog();
 
         $this->assertIsArray($actualBlogData);
@@ -19,7 +24,12 @@ final class GetAllBlogUseCaseTest extends TestCase
     public function testトップページで検索したデータを取得できる場合()
     {
         $searchKeyword = 'A';
-        $interactor = new GetAllBlogUseCase(new BlogMysqlCommand());
+        $blogMysqlCommand = new class extends BlogMysqlCommand
+        {
+            
+        };
+
+        $interactor = new GetAllBlogUseCase($blogMysqlCommand);
         $actualBlogData = $interactor->searchAllBlog($searchKeyword);
 
         $this->assertIsArray($actualBlogData);
