@@ -1,21 +1,21 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Adapter\Repository\BlogRepository;
+use App\UseCase\GetMypageUseCase;
+use App\Infrastructure\Dao\BlogDao;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
     Redirect::handler('user/signin.php');
     exit(); 
 }
-
-use App\Blogs;
-require '../app/blogs.php';
-$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-$blogModel = new Blogs($pdo);
-
 $userId = $_SESSION['user']['id'];
-$myArticles = $blogModel->getMyBlogs($userId);
+
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+$blogMypageRepository = new BlogRepository(new BlogDao($pdo));
+$getMypageUseCase = new GetMypageUseCase($blogMypageRepository);
+$myArticles = $getMypageUseCase->readMypageBlog($userId);
 
 ?>
 

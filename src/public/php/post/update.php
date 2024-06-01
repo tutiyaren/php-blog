@@ -20,7 +20,6 @@ try {
     }
     $user_id = $_SESSION['user']['id'];
     $blogUserId = new BlogUserId($user_id);
-    // $blog_id = $_SESSION['blog'];
     $id = new BlogId($blog_id);
     $blogTitle = new BlogTitle($title);
     $blogContents = new BlogContents($contents);

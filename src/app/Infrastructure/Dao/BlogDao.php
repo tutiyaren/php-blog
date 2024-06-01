@@ -2,6 +2,8 @@
 namespace App\Infrastructure\Dao;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Domain\ValueObject\Blog\NewBlog;
+use App\Domain\ValueObject\Blog\EditBlog;
+use App\Domain\ValueObject\Blog\ReadEditBlog;
 use \PDO;
 use PDOException;
 
@@ -36,7 +38,7 @@ final class BlogDao
         $statement->execute();
     }
 
-    public function update(NewBlog $blog): void
+    public function update(EditBlog $blog): void
     {
         $sql = sprintf(
             'UPDATE %s SET title = :title, contents = :contents WHERE id = :id',
@@ -48,5 +50,70 @@ final class BlogDao
             ':title' => $blog->title()->value(),
             ':contents' => $blog->contents()->value(),
         ));
+    }
+    
+    public function readEdit($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function readMypage($userId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE user_id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $userId]);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function readMypageDetail($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function readDetail($blogId)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE id = :id',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $blogId]);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function allBlog()
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs ORDER BY created_at DESC',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->query($sql);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function searchBlog($searchKeyword)
+    {
+        $sql = sprintf(
+            'SELECT * FROM blogs WHERE title LIKE ? OR contents LIKE ?',
+            self::TABLE_NAME
+        );
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['%' . $searchKeyword . '%', '%' . $searchKeyword . '%']);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

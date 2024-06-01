@@ -1,8 +1,6 @@
 <?php
 namespace App\Adapter\Repository;
 require_once __DIR__ . '/../../../vendor/autoload.php';
-
-use App\Comments;
 use App\Infrastructure\Dao\CommentDao;
 use App\Domain\ValueObject\Comment\NewComment;
 
@@ -18,5 +16,10 @@ final class CommentRepository
     public function insert(NewComment $comment): void
     {
         $this->commentDao->create($comment);
+    }
+
+    public function allComment($blogId)
+    {
+        return $this->commentDao->allComment($blogId);
     }
 }

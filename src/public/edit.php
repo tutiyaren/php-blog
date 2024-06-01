@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Adapter\Repository\BlogRepository;
+use App\UseCase\GetEditBlogUseCase;
+use App\Infrastructure\Dao\BlogDao;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -16,19 +19,11 @@ unset($_SESSION['errors']);
 
 $userId = $_SESSION['user']['id'] ?? '';
 
-use App\Blogs;
-require '../app/blogs.php';
+
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-$blogModel = new Blogs($pdo);
-$blogId = $_GET['id'];
-
-$blog = $blogModel->getBlog($blogId);
-
-if($blog['user_id'] !== $_SESSION['user']['id']) {
-    header('Location: mypage.php');
-    exit();
-}
+$blogRepository = new BlogRepository(new BlogDao($pdo));
+$getBlogUseCase = new GetEditBlogUseCase($blogRepository);
+$blog = $getBlogUseCase->readEditBlog($blogId);
 
 ?>
 

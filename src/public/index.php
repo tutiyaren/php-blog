@@ -1,21 +1,16 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 use App\Infrastructure\Redirect\Redirect;
+use App\Adapter\Repository\BlogRepository;
+use App\UseCase\GetAllBlogUseCase;
+use App\Infrastructure\Dao\BlogDao;
 session_start();
-
 if (!isset($_SESSION['user']['id'])) {
     Redirect::handler('./user/signin.php');
 }
 
-use App\Blogs;
-require '../app/blogs.php';
-$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-// ブログ一覧表示
-$blogsModel = new Blogs($pdo);
 $searchKeyword = isset($_GET['search']) ? $_GET['search'] : '';
 $orderBy = '';
-
 if (isset($_GET['old'])) {
     $orderBy = 'old';
 } 
@@ -23,11 +18,16 @@ if (isset($_GET['new'])) {
     $orderBy = 'new';
 }
 
+
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+$blogAllRepository = new BlogRepository(new BlogDao($pdo));
+$getAllUseCase = new GetAllBlogUseCase($blogAllRepository);
+
 if (!empty($searchKeyword)) {
-    $allBlogs = $blogsModel->searchBlogs($searchKeyword);
+    $allBlogs = $getAllUseCase->searchAllBlog($searchKeyword);
 }
 if(empty($searchKeyword)) {
-    $allBlogs = $blogsModel->getBlogs();
+    $allBlogs = $getAllUseCase->readAllBlog();
 }
 
 if ($orderBy === 'old') {
