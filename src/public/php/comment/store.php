@@ -17,14 +17,15 @@ $comment = $_POST['comments'];
 
 $commentModel = new Comments($pdo);
 
+
 if (empty($commentTitle) || empty($comment)) {
     $_SESSION['errorMessage'] = 'コメント名かコメント内容の入力がありません';
     header('Location: ../../../detail.php?id=' . $blogId);
     exit();
 }
+$createComment = $commentModel->addComments($userId, $blogId, $commentTitle, $comment);
 if ($createComment !== false) {
     header('Location: ../../../detail.php?id=' . $blogId);
     exit();
 }
 
-$createComment = $commentModel->addComments($userId, $blogId, $commentTitle, $comment);
