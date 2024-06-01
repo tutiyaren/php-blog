@@ -4,6 +4,7 @@ use App\Infrastructure\Redirect\Redirect;
 use App\Adapter\Repository\BlogRepository;
 use App\UseCase\GetMypageDetailUseCase;
 use App\Infrastructure\Dao\BlogDao;
+use App\Adapter\Blog\BlogMysqlCommand;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -21,7 +22,7 @@ $userId = $_SESSION['user']['id'] ?? '';
 
 
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-$blogMypageDetailRepository = new BlogRepository(new BlogDao($pdo));
+$blogMypageDetailRepository = new BlogMysqlCommand(new BlogDao($pdo));
 $getMypageDetailUseCase = new GetMypageDetailUseCase($blogMypageDetailRepository);
 $blog = $getMypageDetailUseCase->readMypageDetailBlog($blogId);
 
