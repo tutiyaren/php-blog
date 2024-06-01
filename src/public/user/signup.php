@@ -5,6 +5,7 @@ unset($_SESSION['errors']);
 
 $userName = $_SESSION['user']['name'] ?? '';
 $email = $_SESSION['user']['email'] ?? '';
+$age = $_SESSION['user']['age'] ?? '';
 
 ?>
 
@@ -29,6 +30,9 @@ $email = $_SESSION['user']['email'] ?? '';
         <form action="signup_complete.php" method="post">
             <div>
                 <input type="text" name="name" placeholder="User name">
+            </div>
+            <div>
+                <input type="number" name="age" placeholder="Age">
             </div>
             <div>
                 <input type="email" name="email" placeholder="Email">

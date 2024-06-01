@@ -1,57 +1,62 @@
 <?php
 namespace App\UseCase\UseCaseInteractor;
 require_once __DIR__ . '/../../../vendor/autoload.php';
-use App\Adapter\QueryServise\UserQueryServise;
-use App\Adapter\Repository\UserRepository;
 use App\UseCase\UseCaseInput\SignUpInput;
+use App\Infrastructure\Dao\UserDao;
+use App\Infrastructure\Dao\UserAgeDao;
 use App\UseCase\UseCaseOutput\SignUpOutput;
 use App\Domain\ValueObject\User\NewUser;
-use App\Domain\Entity\User;
+use App\Domain\Entity\UserAge;
+use App\Domain\ValueObject\User\UserId;
 
-
+/**
+ * ユーザー登録ユースケース
+ */
 final class SignUpInteractor
 {
-    const ALLREADY_EXISTS_MESSAGE = 'すでに登録済みのメールアドレスです';
-    const COMPLETED_MESSAGE = '登録が完了しました';
-    private $userRepository;
-    private $userQueryServise;
     private $input;
+    private $userDao;
+    private $userAgeDao;
 
-    public function __construct(SignUpInput $input)
-    {
-        $this->userRepository = new UserRepository();
-        $this->userQueryServise = new UserQueryServise();
+    public function __construct(
+        SignUpInput $input,
+        UserDao $userDao,
+        UserAgeDao $userAgeDao
+    ) {
         $this->input = $input;
+        $this->userDao = $userDao;
+        $this->userAgeDao = $userAgeDao;
     }
 
     public function handler(): SignUpOutput
     {
         $user = $this->findUser();
-        if($this->existsUser($user)) {
-            return new SignUpOutput(false, self::ALLREADY_EXISTS_MESSAGE);
+
+        if ($user !== null) {
+            return new SignUpOutput(false);
         }
+
         $this->signup();
-        return new SignUpOutput(true, self::COMPLETED_MESSAGE);
+        return new SignUpOutput(true);
     }
 
-    private function findUser(): ?User
+    private function findUser(): ?array
     {
-        return $this->userQueryServise->findByEmail($this->input->email());
-    }
-
-    private function existsUser(?User $user): bool
-    {
-        return !is_null($user);
+        return $this->userDao->findByEmail($this->input->email());
     }
 
     private function signup(): void
     {
-        $this->userRepository->insert(
+        $this->userDao->create(
             new NewUser(
                 $this->input->name(),
                 $this->input->email(),
                 $this->input->password()
             )
+        );
+        $user = $this->findUser();
+        $this->userAgeDao->create(
+            new UserAge(new UserId($user['id']), $this->input->age())
         );
     }
 }
