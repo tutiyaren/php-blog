@@ -2,7 +2,7 @@
 namespace App\Domain\ValueObject\Comment;
 use Exception;
 
-final class Comment
+final class CommentId
 {
     const MIN_VALUE = 1;
     const INVALID_MESSAGE = '不正な値です';
