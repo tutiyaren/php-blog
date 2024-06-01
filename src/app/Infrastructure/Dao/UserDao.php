@@ -50,7 +50,8 @@ final class UserDao
     public function findByEmail(Email $email): ?array
     {
         $sql = sprintf(
-            'SELECT * FROM %s WHERE email = :email', self::TABLE_NAME
+            'SELECT u.*, ua.age, ua.created_at AS registrationDate FROM %s u LEFT JOIN users_age ua ON u.id = ua.user_id WHERE u.email = :email',
+            self::TABLE_NAME
         );
         $statement = $this->pdo->prepare($sql);
         $statement->bindValue(':email', $email->value(), PDO::PARAM_STR);

@@ -31,7 +31,6 @@ class UserMySqlQuery
     public function findByEmail(Email $email)
     {
         $userMapper = $this->userDao->findByEmail($email);
-
         return $this->notExistsUser($userMapper)
             ? null
             : new User(
@@ -39,8 +38,8 @@ class UserMySqlQuery
                 new UserName($userMapper['name']),
                 new Email($userMapper['email']),
                 new HashedPassword($userMapper['password']),
-                new Age('20'),
-                new RegistrationDate('2020-12-10 12:58:29')
+                new Age($userMapper['age']),
+                new RegistrationDate($userMapper['registrationDate'])
             );
     }
 
@@ -58,5 +57,10 @@ class UserMySqlQuery
                 new UserId($userOld['user_id']),
                 new Age($userOld['age']),
             );
+    }
+
+    public function fetchAllAge(int $userId): ?array
+    {
+        return $this->userAgeDao->fetchAll($userId);
     }
 }
