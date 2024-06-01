@@ -3,7 +3,9 @@
 namespace App\Adapter\User;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 use App\Infrastructure\Dao\UserDao;
+use App\Infrastructure\Dao\UserAgeDao;
 use App\Domain\Entity\User;
+use App\Domain\Entity\UserAge;
 use App\Domain\ValueObject\User\UserId;
 use App\Domain\ValueObject\User\UserName;
 use App\Domain\ValueObject\Email;
@@ -18,13 +20,15 @@ class UserMySqlQuery
      * @var UserDao
      */
     private $userDao;
+    private $userAgeDao;
 
     public function __construct()
     {
         $this->userDao = new UserDao();
+        $this->userAgeDao = new UserAgeDao();
     }
 
-    public function findByEmail(Email $email): ?User
+    public function findByEmail(Email $email)
     {
         $userMapper = $this->userDao->findByEmail($email);
 
@@ -43,5 +47,16 @@ class UserMySqlQuery
     private function notExistsUser(?array $user): bool
     {
         return is_null($user);
+    }
+
+    public function fetchAll(int $userId): ?array
+    {
+        $userOld = $this->userAgeDao->fetchAll($userId);
+        return $this->notExistsUser($userOld)
+            ? null
+            : new UserAge(
+                new UserId($userOld['user_id']),
+                new Age($userOld['age']),
+            );
     }
 }

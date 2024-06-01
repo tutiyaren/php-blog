@@ -46,9 +46,9 @@ final class UserAgeDao
             self::TABLE_NAME
         );
         $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(':user_id', $userId, PDO::PARAM_STR);
+        $statement->bindValue(':user_id', $userId, PDO::PARAM_INT);
         $statement->execute();
-        $userAge = $statement->fetch(PDO::FETCH_ASSOC);
-        return $userAge === false ? null : $userAge;
+        $userOld = $statement->fetch(PDO::FETCH_ASSOC);
+        return $userOld === false ? null : $userOld;
     }
 }
