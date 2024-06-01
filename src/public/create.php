@@ -1,16 +1,14 @@
 <?php
 session_start();
 ob_start();
-if (!isset($_SESSION['id'])) {
+if (!isset($_SESSION['user']['id'])) {
     header('Location: user/signin.php');
     exit(); 
 }
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
 
-$errorMessage = '';
-if(isset($_SESSION['errorMessage'])) {
-    $errorMessage = $_SESSION['errorMessage'];
-    unset($_SESSION['errorMessage']);
-}
+$userId = $_SESSION['user']['id'] ?? '';
 
 ?>
 
@@ -34,7 +32,9 @@ if(isset($_SESSION['errorMessage'])) {
             </div>
             
             <div>
-                <p><?php echo $errorMessage; ?></p>
+                <?php foreach ($errors as $error): ?>
+                    <p><?php echo $error; ?></p>
+                <?php endforeach; ?>
             </div>
             
             <form action="php/post/store.php" method="post">

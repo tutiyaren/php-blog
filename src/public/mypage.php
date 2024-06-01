@@ -1,17 +1,20 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Infrastructure\Redirect\Redirect;
 session_start();
 ob_start();
-if (!isset($_SESSION['id'])) {
-    header('Location: user/signin.php');
+if (!isset($_SESSION['user']['id'])) {
+    Redirect::handler('user/signin.php');
     exit(); 
 }
+
 use App\Blogs;
 require '../app/blogs.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
 
 $blogModel = new Blogs($pdo);
 
-$userId = $_SESSION['id'];
+$userId = $_SESSION['user']['id'];
 $myArticles = $blogModel->getMyBlogs($userId);
 
 ?>

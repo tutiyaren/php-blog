@@ -1,10 +1,21 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Infrastructure\Redirect\Redirect;
 session_start();
 ob_start();
-if (!isset($_SESSION['id'])) {
-    header('Location: user/signin.php');
+if (!isset($_SESSION['user']['id'])) {
+    Redirect::handler('user/signin.php');
     exit(); 
 }
+
+$blogId = $_GET['id'];
+$_SESSION['blog'] = $blogId;
+
+
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
+
+
 use App\Blogs;
 use App\Comments;
 require '../app/blogs.php';
@@ -15,8 +26,6 @@ if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
     return 'index.php';
 }
 $blogModel = new Blogs($pdo);
-$blogId = $_GET['id'];
-$_SESSION['blog_id'] = $blogId;
 
 
 $blog = $blogModel->getBlog($blogId);
@@ -24,11 +33,6 @@ $blog = $blogModel->getBlog($blogId);
 $commentModel = new Comments($pdo);
 $comments = $commentModel->getComments($blogId);
 
-$errorMessage = '';
-if(isset($_SESSION['errorMessage'])) {
-    $errorMessage = $_SESSION['errorMessage'];
-    unset($_SESSION['errorMessage']);
-}
 
 ?>
 
@@ -66,7 +70,9 @@ if(isset($_SESSION['errorMessage'])) {
                 <h2>この投稿にコメントしますか？</h2>
             </div>
             <div>
-                <?php echo $errorMessage ?>
+                <?php foreach ($errors as $error): ?>
+                    <p><?php echo $error; ?></p>
+                <?php endforeach; ?>
             </div>
             <form action="php/comment/store.php" method="post">
                 <!-- コメントタイトル -->
