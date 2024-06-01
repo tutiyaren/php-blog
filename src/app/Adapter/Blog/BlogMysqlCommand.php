@@ -23,4 +23,10 @@ class BlogMysqlCommand
     {
         $this->blogDao->update($blog);
     }
+
+    public function readEdit($blogId)
+    {
+        return $this->blogDao->readEdit($blogId);
+    }
+
 }

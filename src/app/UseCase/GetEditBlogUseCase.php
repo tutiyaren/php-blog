@@ -3,19 +3,20 @@ namespace App\UseCase;
 require_once __DIR__ . '/../../vendor/autoload.php';
 use App\Adapter\Repository\BlogRepository;
 use App\Domain\ValueObject\Blog\ReadEditBlog;
+use App\Adapter\Blog\BlogMysqlCommand;
 
 class GetEditBlogUseCase
 {
-    public $blogRepository;
+    public $blogMysqlCommand;
 
-    public function __construct(BlogRepository $blogRepository)
+    public function __construct(BlogMysqlCommand $blogMysqlCommand)
     {
-        $this->blogRepository = $blogRepository;
+        $this->blogMysqlCommand = $blogMysqlCommand;
     }
 
 
     public function readEditBlog($blogId)
     {
-        return $this->blogRepository->readEdit($blogId);
+        return $this->blogMysqlCommand->readEdit($blogId);
     }
 }
