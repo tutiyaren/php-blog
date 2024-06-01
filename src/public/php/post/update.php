@@ -8,6 +8,8 @@ use App\Domain\ValueObject\Blog\BlogContents;
 use App\UseCase\UseCaseInput\EditBlogInput;
 use App\UseCase\UseCaseInteractor\EditBlogInteractor;
 use APp\UseCase\UseCaseOutput\EditBlogOutput;
+use App\Adapter\Blog\BlogMysqlCommand;
+use App\Adapter\Blog\BlogMysqlQuery;
 
 $blog_id = filter_input(INPUT_POST, 'blog_id');
 $title = filter_input(INPUT_POST, 'title');
@@ -24,8 +26,10 @@ try {
     $blogTitle = new BlogTitle($title);
     $blogContents = new BlogContents($contents);
     $useCaseInput = new EditBlogInput($id, $blogUserId, $blogTitle, $blogContents);
-    $useCase = new EditBlogInteractor($useCaseInput);
-    $useCaseOutput = $useCase->handler();
+    $blogMysqlQuery = new BlogMysqlQuery();
+    $blogMysqlCommand = new BlogMysqlCommand();
+    $useCase = new EditBlogInteractor($useCaseInput, $blogMysqlQuery, $blogMysqlCommand);
+    $useCaseOutput = $useCase->run();
 
     if(!$useCaseOutput->isSuccess()) {
         throw new Exception($useCaseOutput->message());
