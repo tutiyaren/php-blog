@@ -1,33 +1,10 @@
 <?php
 session_start();
-use App\Signin;
-use App\Signup;
-require '../../app/user/signin_complete.php';
-require '../../app/user/signup_complete.php';
+$errors = $_SESSION['errors'] ?? [];
+unset($_SESSION['errors']);
 
-$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = htmlspecialchars($_POST['name'], ENT_QUOTES);
-    $email = htmlspecialchars($_POST['email'], ENT_QUOTES);
-    $password = htmlspecialchars($_POST['password'], ENT_QUOTES);
-    $password_confirmation = htmlspecialchars($_POST['password_confirmation'], ENT_QUOTES);
-
-    $userModel = new Signup($pdo);
-    $registerUser = $userModel->createUser($name, $email, $password, $password_confirmation);
-}
-
-$success = "";
-if(isset($_SESSION['success'])) {
-    $success = $_SESSION['success'];
-    unset($_SESSION['success']);
-}
-
-$error = "";
-if(isset($_SESSION['errorMessage'])) {
-    $error = $_SESSION['errorMessage'];
-    unset($_SESSION['errorMessage']);
-}
+$successRegistedMessage = $_SESSION['message'] ?? '';
+unset($_SESSION['message']);
 
 ?>
 
@@ -45,14 +22,22 @@ if(isset($_SESSION['errorMessage'])) {
             <h1>ログイン</h1>
         </div>
         <div>
-            <?php echo $success ?>
-            <?php echo $error ?> 
+            <p><?php echo $successRegistedMessage; ?></p>
         </div>
+        <?php if (!empty($errors)): ?>
+            <?php foreach ($errors as $error): ?>
+                <p class="text-red-600"><?php echo $error; ?></p>
+            <?php endforeach; ?>
+        <?php endif; ?>
 
         <!-- form -->
-        <form action="../index.php" method="post">
+        <form action="signin_complete.php" method="post">
             <div>
-                <input type="email" name="email" placeholder="Email">
+                <input type="email" name="email" placeholder="Email" value="<?php if(
+                    isset($_SESSION['email'])
+                ) {
+                    echo $_SESSION['email'];
+                } ?>">
             </div>
             <div>
                 <input type="password" name="password" placeholder="Password">

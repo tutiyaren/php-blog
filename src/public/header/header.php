@@ -14,12 +14,6 @@ if (isset($_SESSION['name'])) {
     $username = $_SESSION['name']; 
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    session_destroy();
-    header('Location: ../user/signin.php');
-    exit();
-}
-
 ?>
 
 <header>
@@ -33,9 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <ol style="width: 100%; display: flex; justify-content: space-around;">
                 <list><a href="index.php">ホーム</a></list>
                 <list><a href="mypage.php">マイページ</a></list>
-                <form action="" method="post">
-                    <button type="submit">ログアウト</button>
-                </form>
+                <a href="/user/logout.php">ログアウト</a>
             </ol>
         </nav>
     </div>

@@ -1,35 +1,16 @@
 <?php
+require_once __DIR__ . '/../vendor/autoload.php';
+use App\Infrastructure\Redirect\Redirect;
+use App\UseCase\UserCaseOutput\SignInOutput;
 session_start();
 
+if (!isset($_SESSION['user']['id'])) {
+    Redirect::handler('./user/signin.php');
+}
+
 use App\Blogs;
-use App\Signin;
-require '../app/user/signin_complete.php';
 require '../app/blogs.php';
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-
-// 認証
-$userModel = new Signin($pdo);
-
-$error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    $userModel->item($email, $password);
-
-    $user = $userModel->getUserByEmail($email);
-    $userModel->validate($user, $password);
-    $error = isset($_SESSION['errorMessage']) ? $_SESSION['errorMessage'] : '';
-}
-
-if (!isset($_SESSION['id'])) {
-    header('Location: user/signup.php');
-}
-if (isset($_POST['logout'])) {
-    session_destroy();
-    header('Location: user/signin.php');
-    exit();
-}
 
 // ブログ一覧表示
 $blogsModel = new Blogs($pdo);
