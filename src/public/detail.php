@@ -8,6 +8,7 @@ use App\Adapter\Repository\CommentRepository;
 use App\UseCase\GetCommentUseCase;
 use App\Infrastructure\Dao\CommentDao;
 use App\Adapter\Blog\BlogMysqlCommand;
+use App\Adapter\Comment\CommentMysqlCommand;
 session_start();
 ob_start();
 if (!isset($_SESSION['user']['id'])) {
@@ -27,7 +28,7 @@ $blogDetailRepository = new BlogMysqlCommand(new BlogDao($pdo));
 $getDetailUseCase = new GetDetailBlogUseCase($blogDetailRepository);
 $blog = $getDetailUseCase->readDetailBlog($blogId);
 
-$commentAllRepository = new CommentRepository(new CommentDao($pdo));
+$commentAllRepository = new CommentMysqlCommand(new CommentDao($pdo));
 $getCommentUseCase = new GetCommentUseCase($commentAllRepository);
 $comments = $getCommentUseCase->readAllComment($blogId);
 

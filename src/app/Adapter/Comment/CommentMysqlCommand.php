@@ -17,4 +17,9 @@ class CommentMysqlCommand
     {
         $this->commentDao->create($comment);
     }
+
+    public function allComment($blogId)
+    {
+        return $this->commentDao->allComment($blogId);
+    }
 }

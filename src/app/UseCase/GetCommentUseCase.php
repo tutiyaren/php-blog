@@ -1,19 +1,19 @@
 <?php
 namespace App\UseCase;
 require_once __DIR__ . '/../../vendor/autoload.php';
-use App\Adapter\Repository\CommentRepository;
+use App\Adapter\Comment\CommentMysqlCommand;
 
 class GetCommentUseCase
 {
-    public $commentAllRepository;
+    public $commentMysqlCommand;
 
-    public function __construct(CommentRepository $commentAllRepository)
+    public function __construct(CommentMysqlCommand $commentMysqlCommand)
     {
-        $this->commentAllRepository = $commentAllRepository;
+        $this->commentMysqlCommand = $commentMysqlCommand;
     }
 
     public function readAllComment($blogId)
     {
-        return $this->commentAllRepository->allComment($blogId);
+        return $this->commentMysqlCommand->allComment($blogId);
     }
 }
