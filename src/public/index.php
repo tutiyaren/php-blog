@@ -4,6 +4,7 @@ use App\Infrastructure\Redirect\Redirect;
 use App\Adapter\Repository\BlogRepository;
 use App\UseCase\GetAllBlogUseCase;
 use App\Infrastructure\Dao\BlogDao;
+use App\Adapter\Blog\BlogMysqlCommand;
 session_start();
 if (!isset($_SESSION['user']['id'])) {
     Redirect::handler('./user/signin.php');
@@ -21,7 +22,7 @@ if (isset($_GET['new'])) {
 
 
 $pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
-$blogAllRepository = new BlogRepository(new BlogDao($pdo));
+$blogAllRepository = new BlogMysqlCommand(new BlogDao($pdo));
 $getAllUseCase = new GetAllBlogUseCase($blogAllRepository);
 
 if (!empty($searchKeyword)) {
