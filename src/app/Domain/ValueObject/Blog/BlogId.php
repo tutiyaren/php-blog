@@ -11,9 +11,9 @@ final class BlogId
 
     public function __construct(int $value)
     {
-        if($this->isInvalid($value)) {
-            throw new Exception(self::INVALID_MESSAGE);
-        }
+        // if($this->isInvalid($value)) {
+        //     throw new Exception(self::INVALID_MESSAGE);
+        // }
         $this->value = $value;
     }
 
@@ -22,8 +22,8 @@ final class BlogId
         return $this->value;
     }
 
-    private function isInvalid(int $value): bool
-    {
-        return $value < self::MIN_VALUE;
-    }
+    // private function isInvalid(int $value): bool
+    // {
+    //     return $value < self::MIN_VALUE;
+    // }
 }

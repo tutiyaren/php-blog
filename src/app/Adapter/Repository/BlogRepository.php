@@ -17,4 +17,9 @@ final class BlogRepository
     {
         $this->blogDao->create($blog);
     }
+
+    public function edit(NewBlog $blog): void
+    {
+        $this->blogDao->update($blog);
+    }
 }
