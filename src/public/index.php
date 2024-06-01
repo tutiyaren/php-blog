@@ -24,11 +24,11 @@ if(!(isset($_SESSION['id']))) {
 }
 if (isset($_POST['logout'])) {
     session_destroy();
-    header('Location: ../user/signin.php');
+    header('Location: user/signin.php');
     exit();
 }
 
-// 
+// ブログ一覧表示
 $blogsModel = new Blogs($pdo);
 $allBlogs = $blogsModel->getBlogs();
 
@@ -64,8 +64,8 @@ $allBlogs = $blogsModel->getBlogs();
             <?php foreach($allBlogs as $allBlog): ?>
                 <h2><?php echo $allBlog['title'] ?></h2>
                 <p><?php echo $allBlog['created_at'] ?></p>
-                <p><?php echo $allBlog['contents'] ?></p>
-                <p><a href="detail.php">詳細記事へ</a></p>
+                <p><?php echo mb_strimwidth($allBlog['contents'], 0, 31, '…') ?></p>
+                <p><a href="detail.php?id=<?php echo $allBlog['id'] ?>">詳細記事へ</a></p>
                 <div>--------------------------------------------------</div>
             <?php endforeach; ?>
 

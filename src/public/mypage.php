@@ -1,3 +1,21 @@
+<?php
+session_start();
+ob_start();
+if (!isset($_SESSION['id'])) {
+    header('Location: user/signin.php');
+    exit(); 
+}
+use App\Blogs;
+require '../app/blogs.php';
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+
+$blogModel = new Blogs($pdo);
+
+$userId = $_SESSION['id'];
+$myArticles = $blogModel->getMyBlogs($userId);
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -22,13 +40,13 @@
 
         <!-- マイ記事一覧 -->
         <div>
-
-            <h2>タイトル</h2>
-            <p>作成日時</p>
-            <p>contents</p>
-            <p><a href="myarticledetail.php">マイ該当詳細記事へ</a></p>
-            <div>--------------------------------------------------</div>
-
+            <?php foreach($myArticles as $myArticle): ?>
+                <h2><?php echo $myArticle['title'] ?></h2>
+                <p><?php echo $myArticle['created_at'] ?></p>
+                <p><?php echo mb_strimwidth($myArticle['contents'], 0, 31, '…') ?></p>
+                <p><a href="myarticledetail.php?id=<?php echo $myArticle['id'] ?>">マイ詳細記事へ</a></p>
+                <div>--------------------------------------------------</div>
+            <?php endforeach; ?>
         </div>
 
 

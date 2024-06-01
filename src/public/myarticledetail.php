@@ -1,3 +1,30 @@
+<?php
+session_start();
+ob_start();
+if (!isset($_SESSION['id'])) {
+    header('Location: user/signin.php');
+    exit(); 
+}
+use App\Blogs;
+require '../app/blogs.php';
+$pdo = new PDO('mysql:host=mysql;dbname=blog', 'root', 'password');
+
+if(!(isset($_GET['id']) && is_numeric($_GET['id']))) {
+    header('Location: mypage.php');
+    exit();
+}
+$blogModel = new Blogs($pdo);
+$blogId = $_GET['id'];
+
+$blog = $blogModel->getBlog($blogId);
+
+if($blog['user_id'] !== $_SESSION['id']) {
+    header('Location: mypage.php');
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -12,19 +39,22 @@
     <main>
 
         <div>
-            <h1>マイ記事タイトル</h1>
+            <h1><?php echo $blog['title'] ?></h1>
         </div>
 
         <!-- マイ記事の詳細、表示、編集、削除、マイページへ -->
-        <form action="" method=""> 
+        <div>
             <div>
-                <p>投稿日時:  </p>
-                <p>記事内容</p>
+                <p>投稿日時:  <?php echo $blog['created_at'] ?></p>
+                <p><?php echo $blog['contents'] ?></p>
             </div>
-            <button><a href="edit.php">編集</a></button>
-            <button type="submit">削除</button>
+            <button><a href="edit.php?id=<?php echo $blog['id'] ?>">編集</a></button>
+            <form action="php/post/delete.php" method="post"> 
+                <button type="submit" name="delete">削除</button>
+                <input type="hidden" name="blog_id" value="<?php echo $blog['id'] ?>">
+            </form>
             <button><a href="mypage.php">マイページへ</a></button>
-        </form>
+        </div>
 
     </main>
   

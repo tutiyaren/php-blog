@@ -1,3 +1,19 @@
+<?php
+session_start();
+ob_start();
+if (!isset($_SESSION['id'])) {
+    header('Location: user/signin.php');
+    exit(); 
+}
+
+$errorMessage = '';
+if(isset($_SESSION['errorMessage'])) {
+    $errorMessage = $_SESSION['errorMessage'];
+    unset($_SESSION['errorMessage']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -16,7 +32,12 @@
             <div>
                 <h2>新規記事</h2>
             </div>
-            <form action="" method="post">
+            
+            <div>
+                <p><?php echo $errorMessage; ?></p>
+            </div>
+            
+            <form action="php/post/store.php" method="post">
                 <!-- 記事タイトル -->
                 <div>
                     <label for="title">タイトル</label>
