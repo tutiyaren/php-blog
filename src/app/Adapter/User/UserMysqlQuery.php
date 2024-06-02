@@ -13,6 +13,7 @@ use App\Domain\ValueObject\HashedPassword;
 use App\Domain\Interface\UserQuery;
 use App\Domain\ValueObject\User\Age;
 use App\Domain\ValueObject\User\RegistrationDate;
+use DateTime; 
 
 class UserMySqlQuery
 {
@@ -31,6 +32,7 @@ class UserMySqlQuery
     public function findByEmail(Email $email)
     {
         $userMapper = $this->userDao->findByEmail($email);
+        $registrationDateValue = $userMapper['registrationDate'] ?? (new DateTime())->format('Y-m-d H:i:s');
         return $this->notExistsUser($userMapper)
             ? null
             : new User(
@@ -38,8 +40,8 @@ class UserMySqlQuery
                 new UserName($userMapper['name']),
                 new Email($userMapper['email']),
                 new HashedPassword($userMapper['password']),
-                new Age($userMapper['age']),
-                new RegistrationDate($userMapper['registrationDate'])
+                new Age((int)$userMapper['age']),
+                new RegistrationDate($registrationDateValue)
             );
     }
 

@@ -28,7 +28,7 @@ try {
     $userName = new UserName($name);
     $userEmail = new Email($email);
     $userPassword = new InputPassword($password);
-    $userAge = new Age($age);
+    $userAge = new Age((int)$age);
     $useCaseInput = new SignUpInput(
         $userName,
         $userEmail,
