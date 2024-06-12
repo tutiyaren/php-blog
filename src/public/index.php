@@ -52,6 +52,7 @@ if ($orderBy === 'new') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogアプリ</title>
   <link rel="stylesheet" href="./css/modal.css">
+  <link rel="stylesheet" href="./css/click.css">
 </head>
 <body>
     <?php include 'header/header.php'; ?>
@@ -84,9 +85,9 @@ if ($orderBy === 'new') {
                 ENT_QUOTES,
                 'UTF-8'
             ); ?>">
-            <button type="submit">検索</button>
-            <button type="submit" name="new">新しい順</button>
-            <button type="submit" name="old">古い順</button>
+            <button type="submit" id="search" class="search">検索</button>
+            <button type="submit" id="newSort" name="new" class="newSort">新しい順</button>
+            <button type="submit" id="oldSort" name="old" class="oldSort">古い順</button>
         </form>
         
 
@@ -107,6 +108,7 @@ if ($orderBy === 'new') {
     </main>
 
     <script src="./js/modal.js"></script>
+    <script src="./js/click.js"></script>
 
 </body>
 </html>
