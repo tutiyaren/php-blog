@@ -53,6 +53,7 @@ if ($orderBy === 'new') {
   <title>Blogアプリ</title>
   <link rel="stylesheet" href="./css/modal.css">
   <link rel="stylesheet" href="./css/click.css">
+  <link rel="stylesheet" href="./css/scroll.css">
 </head>
 <body>
     <?php include 'header/header.php'; ?>
@@ -92,7 +93,7 @@ if ($orderBy === 'new') {
         
 
         <!-- 記事一覧 -->
-        <div>
+        <div id="blogList">
             <?php foreach ($allBlogs as $allBlog): ?>
                 <h2><?php echo $allBlog['title']; ?></h2>
                 <p><?php echo $allBlog['created_at']; ?></p>
@@ -109,6 +110,7 @@ if ($orderBy === 'new') {
 
     <script src="./js/modal.js"></script>
     <script src="./js/click.js"></script>
+    <script src="./js/scroll.js"></script>
 
 </body>
 </html>
