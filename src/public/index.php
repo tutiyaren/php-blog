@@ -51,13 +51,30 @@ if ($orderBy === 'new') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogアプリ</title>
+  <link rel="stylesheet" href="./css/modal.css">
+  <link rel="stylesheet" href="./css/click.css">
 </head>
 <body>
     <?php include 'header/header.php'; ?>
 
     <main>
         <!-- タイトル -->
-        <p><?php echo $memberStatus; ?></p>
+        <p class="member-status" id="memberCondition"><?php echo $memberStatus; ?></p>
+
+        <div class="modal-overlay" id="memberOverlay">
+            <div class="modal">
+                <dialog class="member" id="openCondition">
+                    <p class="member-title">会員ランクの条件</p>
+                    <p class="member-inner">
+                        <span class="member-text">18歳以上であること</span>
+                        <span class="member-text">会員登録してから30日以上経過していること</span>
+                    </p>
+                    <button class="close-button" id="closeButton">閉じる</button>
+                </dialog>
+            </div>
+        </div>
+
+        
         <div>
             <h1>blog一覧</h1>
         </div>
@@ -68,9 +85,9 @@ if ($orderBy === 'new') {
                 ENT_QUOTES,
                 'UTF-8'
             ); ?>">
-            <button type="submit">検索</button>
-            <button type="submit" name="new">新しい順</button>
-            <button type="submit" name="old">古い順</button>
+            <button type="submit" id="search" class="search">検索</button>
+            <button type="submit" id="newSort" name="new" class="newSort">新しい順</button>
+            <button type="submit" id="oldSort" name="old" class="oldSort">古い順</button>
         </form>
         
 
@@ -89,6 +106,9 @@ if ($orderBy === 'new') {
         </div>
 
     </main>
+
+    <script src="./js/modal.js"></script>
+    <script src="./js/click.js"></script>
 
 </body>
 </html>

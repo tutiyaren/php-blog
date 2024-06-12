@@ -1,0 +1,46 @@
+.member-status {
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-color: rgba(151, 255, 177, 0.6);
+  z-index: 10;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+.modal {
+  position: relative;
+}
+.member {
+  position: absolute;
+  margin: auto;
+  padding: 2% 3%;
+  background: white;
+  border-radius: 5px;
+  z-index: 20;
+  background-color: rgba(92, 224, 125);
+}
+.member-title {
+  font-weight: bold;
+  text-align: center;
+}
+.member-inner {
+  display: flex;
+  flex-direction: column;
+  line-height: 130%;
+}
+
+.close-button {
+  cursor: pointer;
+  border: none;
+  border-radius: 10%;
+  background-color: rgba(255, 255, 255);
+}
